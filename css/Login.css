@@ -1,0 +1,76 @@
+.container-fluied {
+    background-color: #157347;
+}
+
+.register-form {
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .register-form .input-feilds {
+    margin-bottom: 15px;
+  }
+  
+  .register-form .input-feilds label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    
+  }
+  
+  .register-form .input-feilds input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  .already-register{
+    display: inline-block;
+    margin-top: 13px;
+   
+    
+  }
+  .already-register .link{
+    text-decoration: none;
+    font-weight: normal;
+    font-size: 18px;
+  }
+  .already-register .link:hover{
+   background-color: #157347;
+    color: white;
+    padding: 3px;
+    border: none;
+    border-radius: 5px;
+  }
+  .register-form h2{ 
+    text-align: center;
+    color: gray;
+  }
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .register-form {
+      max-width: 100%;
+      padding: 20px;
+    }
+  
+    .container-fluied {
+      padding: 10px;
+    }
+  }
+  
+  /* Additional adjustments for very small devices */
+  @media (max-width: 576px) {
+    .register-form {
+      padding: 15px;
+    }
+  
+    .register-form .input-feilds label {
+      font-size: 14px;
+    }
+  
+    .register-form .input-feilds input {
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
