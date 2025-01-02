@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../css/Register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RegisterUser } from "../../apicalls/users";
 function Register() {
   const [name, setName] = useState(""); // To store name input
   const [email, setEmail] = useState(""); // To store email input
   const [password, setPassword] = useState(""); // To store password input
+  const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
@@ -27,6 +28,11 @@ function Register() {
       console.log({ Error: error.message });
     }
   };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">

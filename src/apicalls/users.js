@@ -23,3 +23,16 @@ export const LoginUser = async (payload) => {
     return { success: false, message: "An error occurred during login." };
   }
 };
+
+// get current user
+// we are not sending any payload only the authorization will havethe headers
+
+export const GetCurrentUser = async () => {
+  try {
+    const response = await axiosInstance.get("/api/users/get-current-user");
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+// wea call GetCurrentUser in Protectedpage

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../css/Login.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../../apicalls/users";
 function Login() {
   const [email, setEmail] = useState(""); // To hold the email value
   const [password, setPassword] = useState(""); // To hold the password value
-
+  const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the page from reloading on form submit
@@ -19,6 +19,8 @@ function Login() {
 
       if (response.success) {
         localStorage.setItem("token", response.data);
+        // window.location.href = "/"; -> this is blinking so we use useNavigate // lets check authorization i am navigating the user to home page by refreshing the normal page
+        navigate("/");
         console.log(response.message);
         setEmail("");
         setPassword("");
@@ -29,7 +31,11 @@ function Login() {
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
