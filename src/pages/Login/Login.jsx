@@ -2,19 +2,27 @@ import React, { useEffect, useState } from "react";
 import "../../../css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../../apicalls/users";
+import { SetLoader } from "../../redux/loaderSlice";
+import { useDispatch } from "react-redux";
+
 function Login() {
   const [email, setEmail] = useState(""); // To hold the email value
   const [password, setPassword] = useState(""); // To hold the password value
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the page from reloading on form submit
     try {
+      dispatch(SetLoader(true)); //intialy setloader true once we gotthe response setloader falseeventhe catch block also false
       // Prepare the payload to be sent to the backend
       const payload = { email: email, password: password };
 
       // Call the LoginUser function from the API utility
       const response = await LoginUser(payload);
+
+      dispatch(SetLoader(false));
       console.log(response.success);
 
       if (response.success) {
@@ -28,6 +36,7 @@ function Login() {
         throw new Error(response.message);
       }
     } catch (error) {
+      dispatch(SetLoader(false));
       console.log(error);
     }
   };

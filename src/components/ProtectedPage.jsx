@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { GetCurrentUser } from "../apicalls/users";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { SetLoader } from "../redux/loaderSlice";
+import { SetUser } from "../redux/userSlice";
 
 function ProtectedPage({ children }) {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+
+  const { user } = useSelector((state) => state.users); //now we don'thave state variable stiil we have see the output
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const validateToken = async () => {
     try {
+      dispatch(SetLoader(true));
       const response = await GetCurrentUser();
       console.log(response);
       console.log(response.data);
-
+      dispatch(SetLoader(false));
       if (response.success) {
-        setUser(response.data);
+        // setUser(response.data);
+        dispatch(SetUser(response.data));
       } else {
         navigate("/login");
         console.log(response.message);
       }
     } catch (error) {
+      dispatch(SetLoader(false));
       navigate("/login");
       console.log(error);
     }
@@ -33,14 +42,35 @@ function ProtectedPage({ children }) {
   //   if the user is there then only render the children else don't render any children
 
   return (
-    <div>
-      {user && (
-        <div className="p-5">
-          {user.name}
-          {children}
+    user && (
+      <div className="">
+        <div className="d-flex justify-content-between align-items-center bg-primary p-4">
+          {/* Header */}
+          <h2 className="text-white">Marcketpalce App</h2>
+          <div className="bg-white py-2 px-3 rounded">
+            <div>
+              {" "}
+              <i className="fa-solid fa-user mx-3 "></i>
+              <span
+                className="text-decoration-underline fw-bold text-uppercase"
+                style={{ cursor: "pointer" }}
+              >
+                {" "}
+                {user.name}
+              </span>
+              <i
+                className="fa-solid fa-right-from-bracket ms-4"
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  navigate("/login");
+                }}
+              ></i>
+            </div>
+          </div>
         </div>
-      )}
-    </div>
+        <div className="p-3">{children}</div>
+      </div>
+    )
   );
 }
 

@@ -6,7 +6,12 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import ProtectedPage from "./components/ProtectedPage";
+import Spinner from "./components/Spinner";
+import { useSelector } from "react-redux";
 function App() {
+  // what ever name you give in the store that has to be given heir this loaders match with stat.loaders now showing the spinner componenet only when the loading is true
+
+  const { loading } = useSelector((state) => state.loaders);
   return (
     // <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
     //   <div className=" bg-white p-5">
@@ -17,6 +22,8 @@ function App() {
     //   </div>
     // </div>
     <>
+      {loading && <Spinner />}
+
       <Router>
         <Routes>
           {/* home page is protected */}

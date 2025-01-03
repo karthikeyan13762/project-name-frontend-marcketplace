@@ -2,22 +2,28 @@ import React, { useEffect, useState } from "react";
 import "../../../css/Register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { RegisterUser } from "../../apicalls/users";
+import { useDispatch } from "react-redux";
+import { SetLoader } from "../../redux/loaderSlice";
 function Register() {
   const [name, setName] = useState(""); // To store name input
   const [email, setEmail] = useState(""); // To store email input
   const [password, setPassword] = useState(""); // To store password input
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
     try {
+      dispatch(SetLoader(true));
       // Prepare the payload to send to the backend
       const payload = { name: name, email: email, password: password };
       console.log(payload);
 
       // Call the RegisterUser function from the API utility
       const response = await RegisterUser(payload);
-
+      navigate("/login");
+      dispatch(SetLoader(false));
       // Handle the response (e.g., show a success message, or handle error)
       console.log(response);
 
@@ -25,6 +31,7 @@ function Register() {
       setEmail("");
       setPassword("");
     } catch (error) {
+      dispatch(SetLoader(false));
       console.log({ Error: error.message });
     }
   };
