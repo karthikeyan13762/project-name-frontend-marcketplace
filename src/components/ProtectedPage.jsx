@@ -49,13 +49,14 @@ function ProtectedPage({ children }) {
           <h2 className="text-white">Marcketpalce App</h2>
           <div className="bg-white py-2 px-3 rounded">
             <div>
-              {" "}
               <i className="fa-solid fa-user mx-3 "></i>
               <span
                 className="text-decoration-underline fw-bold text-uppercase"
                 style={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/profile");
+                }}
               >
-                {" "}
                 {user.name}
               </span>
               <i

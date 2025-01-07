@@ -8,6 +8,7 @@ import Register from "./pages/Register/Register";
 import ProtectedPage from "./components/ProtectedPage";
 import Spinner from "./components/Spinner";
 import { useSelector } from "react-redux";
+import Profile from "./pages/Profile/Profile";
 function App() {
   // what ever name you give in the store that has to be given heir this loaders match with stat.loaders now showing the spinner componenet only when the loading is true
 
@@ -32,6 +33,14 @@ function App() {
             element={
               <ProtectedPage>
                 <Home />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedPage>
+                <Profile />
               </ProtectedPage>
             }
           />
