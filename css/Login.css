@@ -1,5 +1,5 @@
 .container-fluied {
-    background-color: #157347;
+    background-color: #0D6EFD !important;
 }
 
 .register-form {
@@ -37,7 +37,7 @@
     font-size: 18px;
   }
   .already-register .link:hover{
-   background-color: #157347;
+   background-color: #0D6EFD !important;
     color: white;
     padding: 3px;
     border: none;

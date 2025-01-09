@@ -86,7 +86,7 @@ function Register() {
             <input
               type="submit"
               value={"Register"}
-              className="btn btn-success rounded-0"
+              className="btn btn-primary rounded-0"
             />
             <span className="already-register ">
               Already have an account?{" "}

@@ -1,10 +1,14 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import "./ProductForm.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AddProduct } from "../../../apicalls/prodoucts";
 import { SetLoader } from "../../../redux/loaderSlice";
-function ProductForm({ shoModel, setShoModel }) {
+
+import { EditProduct } from "../../../apicalls/prodoucts";
+import Images from "./Images";
+
+function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
   // to get the current userid weneed to fetchit from the redux
 
   const { user } = useSelector((state) => state.users);
@@ -49,10 +53,18 @@ function ProductForm({ shoModel, setShoModel }) {
     }
 
     try {
-      const response = await AddProduct(data);
+      dispatch(SetLoader(true));
+      const response = selectedProduct
+        ? await EditProduct(selectedProduct._id, data)
+        : await AddProduct(data);
       dispatch(SetLoader(false));
       if (response.success) {
-        console.log(response.message);
+        alert(
+          selectedProduct
+            ? "Product updated successfully"
+            : "Product added successfully"
+        );
+        getData();
         setShoModel(false);
       } else {
         console.log(response.message);
@@ -62,6 +74,23 @@ function ProductForm({ shoModel, setShoModel }) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    // if (selectedProduct) {
+    //   formRef.current.setFeildValue(selectedProduct);
+    // }
+    if (selectedProduct && formRef.current) {
+      for (const key in selectedProduct) {
+        if (formRef.current[key]) {
+          if (formRef.current[key].type === "checkbox") {
+            formRef.current[key].checked = selectedProduct[key]; // Set checkbox state
+          } else {
+            formRef.current[key].value = selectedProduct[key]; // Set value for other fields
+          }
+        }
+      }
+    }
+  }, [selectedProduct]); // go to the product.jsx for create a use state hook forselecting product
   return (
     <>
       <div
@@ -110,6 +139,7 @@ function ProductForm({ shoModel, setShoModel }) {
                   role="tab"
                   aria-controls="images"
                   aria-selected="false"
+                  disabled={!selectedProduct}
                 >
                   Images
                 </button>
@@ -229,7 +259,7 @@ function ProductForm({ shoModel, setShoModel }) {
 
                   <div className="d-grid gap-2 mt-4">
                     <button className="btn btn-primary" type="Submit">
-                      Save
+                      {selectedProduct ? "Update" : "Save"}
                     </button>
                   </div>
                 </form>
@@ -240,8 +270,11 @@ function ProductForm({ shoModel, setShoModel }) {
                 role="tabpanel"
                 aria-labelledby="images-tab"
               >
-                <h1>Images</h1>
-                <p>Here you can upload product images.</p>
+                <Images
+                  selectedProduct={selectedProduct}
+                  getData={getData}
+                  setShoModel={setShoModel}
+                />
               </div>
             </div>
 

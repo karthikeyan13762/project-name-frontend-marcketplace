@@ -79,7 +79,7 @@ function Login() {
             <input
               type="submit"
               value={"Login"}
-              className="btn btn-success rounded-0"
+              className="btn btn-primary rounded-0"
             />
             <span className="already-register ">
               Don't have an account?{" "}
