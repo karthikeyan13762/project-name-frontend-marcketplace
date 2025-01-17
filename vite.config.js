@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://marcketplace-8.netlify.app", // Backend server URL
+        target: "http://localhost:5173", // Backend server URL
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ""), // Optional: Removes '/api' prefix
       },
