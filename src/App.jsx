@@ -9,19 +9,13 @@ import ProtectedPage from "./components/ProtectedPage";
 import Spinner from "./components/Spinner";
 import { useSelector } from "react-redux";
 import Profile from "./pages/Profile/Profile";
+import Admin from "./pages/Admin/Admin";
+import ProductInfo from "./pages/ProductInfo/ProductInfo";
 function App() {
   // what ever name you give in the store that has to be given heir this loaders match with stat.loaders now showing the spinner componenet only when the loading is true
 
   const { loading } = useSelector((state) => state.loaders);
   return (
-    // <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
-    //   <div className=" bg-white p-5">
-    //     <h1>Marcketplace App</h1>
-    //     <button type="button" className="btn btn-success rounded-0">
-    //       Success
-    //     </button>
-    //   </div>
-    // </div>
     <>
       {loading && <Spinner />}
 
@@ -41,6 +35,22 @@ function App() {
             element={
               <ProtectedPage>
                 <Profile />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedPage>
+                <Admin />
+              </ProtectedPage>
+            }
+          />
+          <Route
+            path="/product/:id"
+            element={
+              <ProtectedPage>
+                <ProductInfo />
               </ProtectedPage>
             }
           />

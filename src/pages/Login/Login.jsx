@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../../../css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import { LoginUser } from "../../apicalls/users";
+import { GetCurrentUser, LoginUser } from "../../apicalls/users";
 import { SetLoader } from "../../redux/loaderSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { SetUser } from "../../redux/userSlice";
 
 function Login() {
   const [email, setEmail] = useState(""); // To hold the email value
@@ -14,6 +15,7 @@ function Login() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent the page from reloading on form submit
+
     try {
       dispatch(SetLoader(true)); //intialy setloader true once we gotthe response setloader falseeventhe catch block also false
       // Prepare the payload to be sent to the backend
@@ -23,13 +25,20 @@ function Login() {
       const response = await LoginUser(payload);
 
       dispatch(SetLoader(false));
-      console.log(response.success);
 
       if (response.success) {
         localStorage.setItem("token", response.data);
+        window.location.reload();
+        // Clear the user state in Redux
+        // Refresh the page after logging out
+
         // window.location.href = "/"; -> this is blinking so we use useNavigate // lets check authorization i am navigating the user to home page by refreshing the normal page
+        const userResponse = await GetCurrentUser();
+        if (userResponse.success) {
+          dispatch(SetUser(userResponse.data)); // Set the user in Redux
+        }
         navigate("/");
-        console.log(response.message);
+
         setEmail("");
         setPassword("");
       } else {
@@ -37,12 +46,13 @@ function Login() {
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      console.log(error);
+      return error.message;
     }
   };
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
+      // Clear old user data
     }
   }, []);
   return (
@@ -61,6 +71,7 @@ function Login() {
               required
               onChange={(e) => setEmail(e.target.value)} // Set email value on change
               value={email}
+              maxLength={25}
             />
           </div>
           <div className="input-feilds">
@@ -73,6 +84,7 @@ function Login() {
               required
               onChange={(e) => setPassword(e.target.value)} // Set password value on change
               value={password}
+              maxLength={25}
             />
           </div>
           <div className="input-feilds">

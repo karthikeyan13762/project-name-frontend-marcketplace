@@ -15,20 +15,17 @@ function ProtectedPage({ children }) {
     try {
       dispatch(SetLoader(true));
       const response = await GetCurrentUser();
-      console.log(response);
-      console.log(response.data);
+
       dispatch(SetLoader(false));
       if (response.success) {
         // setUser(response.data);
         dispatch(SetUser(response.data));
       } else {
         navigate("/login");
-        console.log(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));
       navigate("/login");
-      console.log(error);
     }
   };
   useEffect(() => {
@@ -36,9 +33,11 @@ function ProtectedPage({ children }) {
       validateToken();
     } else {
       // if try to navigatethehome page this error  comes in console jwt malformed - thatmenas thereis now jwt insted of getting this message you can doone thing if there is no token directly navigate the user to login page becaus  this jwt malware  this wordonly technical people will understand normal people will not understand youjust navigate theuser to home page to login
+      dispatch(SetUser(null));
       navigate("/login");
     }
-  }, []);
+  }, [navigate]);
+
   //   if the user is there then only render the children else don't render any children
 
   return (
@@ -46,7 +45,13 @@ function ProtectedPage({ children }) {
       <div className="">
         <div className="d-flex justify-content-between align-items-center bg-primary p-4">
           {/* Header */}
-          <h2 className="text-white">Marcketpalce App</h2>
+          <h2
+            className="text-white "
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
+            Marcketpalce App
+          </h2>
           <div className="bg-white py-2 px-3 rounded">
             <div>
               <i className="fa-solid fa-user mx-3 "></i>
@@ -54,7 +59,11 @@ function ProtectedPage({ children }) {
                 className="text-decoration-underline fw-bold text-uppercase"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  navigate("/profile");
+                  if (user.role === "user") {
+                    navigate("/profile");
+                  } else {
+                    navigate("/admin");
+                  }
                 }}
               >
                 {user.name}

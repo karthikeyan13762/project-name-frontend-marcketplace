@@ -19,7 +19,6 @@ export const LoginUser = async (payload) => {
     const response = await axiosInstance.post("/api/users/login", payload);
     return response.data;
   } catch (error) {
-    console.error("Error during login:", error.response?.data || error.message);
     return { success: false, message: "An error occurred during login." };
   }
 };
@@ -30,6 +29,27 @@ export const LoginUser = async (payload) => {
 export const GetCurrentUser = async () => {
   try {
     const response = await axiosInstance.get("/api/users/get-current-user");
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const GetAllUsers = async () => {
+  try {
+    const response = await axiosInstance.get("/api/users/get-users");
+    return response.data;
+  } catch (error) {
+    return error.message;
+  }
+};
+
+export const UpdateUserStatus = async (userId, payload) => {
+  try {
+    const response = await axiosInstance.put(
+      "/api/users/update-user-status/" + userId,
+      payload
+    );
     return response.data;
   } catch (error) {
     return error.message;

@@ -33,6 +33,7 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
 
   const dispatch = useDispatch();
   const formRef = useRef(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(formRef.current);
@@ -40,6 +41,7 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
     const data = {};
     data.seller = user._id;
     data.status = "pending";
+
     // Handle all form fields
     const inputs = formRef.current.elements;
     for (const input of inputs) {
@@ -67,30 +69,42 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
         getData();
         setShoModel(false);
       } else {
-        console.log(response.message);
+        return response.message;
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      console.log(error.message);
+      return error.message;
     }
   };
-
   useEffect(() => {
-    // if (selectedProduct) {
-    //   formRef.current.setFeildValue(selectedProduct);
-    // }
     if (selectedProduct && formRef.current) {
       for (const key in selectedProduct) {
-        if (formRef.current[key]) {
-          if (formRef.current[key].type === "checkbox") {
-            formRef.current[key].checked = selectedProduct[key]; // Set checkbox state
+        const element = formRef.current[key];
+        if (element) {
+          if (element.type === "checkbox") {
+            // Handle checkboxes explicitly
+            element.checked = Boolean(selectedProduct[key]);
           } else {
-            formRef.current[key].value = selectedProduct[key]; // Set value for other fields
+            // Set value for other input types
+            element.value = selectedProduct[key];
           }
         }
       }
+
+      // Ensure the 'showBidsOnProductPage' checkbox is also handled
+      const showBidsCheckbox = formRef.current.querySelector(
+        'input[name="showBidsOnProductPage"]'
+      );
+      if (showBidsCheckbox) {
+        showBidsCheckbox.checked = Boolean(
+          selectedProduct.showBidsOnProductPage
+        );
+      }
+    } else if (formRef.current) {
+      // Reset the form when no product is selected
+      formRef.current.reset();
     }
-  }, [selectedProduct]); // go to the product.jsx for create a use state hook forselecting product
+  }, [selectedProduct]);
   return (
     <>
       <div
@@ -166,6 +180,7 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
                       placeholder="Name"
                       required
                       name="name"
+                      maxLength={25}
                     />
                   </div>
                   <div>
@@ -182,6 +197,7 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
                       placeholder="Description"
                       required
                       name="description"
+                      maxLength={35}
                     />
                   </div>
                   <div className="row">
@@ -199,6 +215,7 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
                         id="price"
                         name="price"
                         required
+                        max={"1000"}
                       />
                     </div>
                     <div className="col">
@@ -212,6 +229,8 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
                         id="age"
                         name="age"
                         required
+                        min={"2"}
+                        max={"30"}
                       />
                     </div>
                     <div className="col">
@@ -257,6 +276,20 @@ function ProductForm({ shoModel, setShoModel, selectedProduct, getData }) {
                     })}
                   </div>
 
+                  {/* <div className="row mt-3">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="showBidsOnProductPage"
+                      name="showBidsOnProductPage" // Correct name
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="showBidsOnProductPage"
+                    >
+                      Show Bids on product page
+                    </label>
+                  </div> */}
                   <div className="d-grid gap-2 mt-4">
                     <button className="btn btn-primary" type="Submit">
                       {selectedProduct ? "Update" : "Save"}

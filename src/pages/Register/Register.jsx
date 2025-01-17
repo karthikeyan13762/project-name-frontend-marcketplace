@@ -18,21 +18,21 @@ function Register() {
       dispatch(SetLoader(true));
       // Prepare the payload to send to the backend
       const payload = { name: name, email: email, password: password };
-      console.log(payload);
 
       // Call the RegisterUser function from the API utility
       const response = await RegisterUser(payload);
-      navigate("/login");
+
       dispatch(SetLoader(false));
       // Handle the response (e.g., show a success message, or handle error)
-      console.log(response);
-
+      if (response.success) {
+        navigate("/login");
+      }
       setName("");
       setEmail("");
       setPassword("");
     } catch (error) {
       dispatch(SetLoader(false));
-      console.log({ Error: error.message });
+      return error.message;
     }
   };
   useEffect(() => {
@@ -56,6 +56,7 @@ function Register() {
               required
               onChange={(e) => setName(e.target.value)} // Update name value on change
               value={name}
+              maxLength={25}
             />
           </div>
           <div className="input-feilds">
@@ -68,6 +69,7 @@ function Register() {
               required
               onChange={(e) => setEmail(e.target.value)} // Update email value on change
               value={email}
+              maxLength={25}
             />
           </div>
           <div className="input-feilds">
@@ -80,6 +82,7 @@ function Register() {
               required
               onChange={(e) => setPassword(e.target.value)} // Update password value on change
               value={password}
+              maxLength={25}
             />
           </div>
           <div className="input-feilds">

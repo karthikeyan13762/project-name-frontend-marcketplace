@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from "react";
 import ProductForm from "./ProductForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SetLoader } from "../../../redux/loaderSlice";
-import { GetProducts } from "../../../apicalls/prodoucts";
-import { DeleteProduct } from "../../../apicalls/prodoucts";
+import { GetProducts, DeleteProduct } from "../../../apicalls/prodoucts";
+import Bids from "./Bids";
 
 function Product() {
+  const [showBids, setShowBids] = useState(false);
   const [shoModel, setShoModel] = useState(false);
+
   const [products, setProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [selectedProduct, setSelectedProduct] = useState(null); //the momenet we clickon the edit button wearegoing to set the selected products is this record and open themodel
-  console.log(products);
-
+  const { user } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   const getData = async () => {
     try {
       dispatch(SetLoader(true));
-      const response = await GetProducts(); //latter wearegoing tofetchthe products only on the selleridwrite now wedit not add mongodb filter just complete the productcrud operation latterwe are going to make changeshere
-      console.log(response);
+      const response = await GetProducts({ seller: user._id });
 
       dispatch(SetLoader(false));
-
       if (response.success) {
-        setProducts(response.message);
+        setProducts(response.data);
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      console.log(error.message);
+      return error.message;
     }
   };
 
@@ -37,9 +36,7 @@ function Product() {
       const response = await DeleteProduct(id);
 
       dispatch(SetLoader(false));
-
       if (response.success) {
-        // Filter out the deleted product from the local state
         setProducts((prevProducts) =>
           prevProducts.filter((product) => product._id !== id)
         );
@@ -48,45 +45,14 @@ function Product() {
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      console.log(error.message);
+      return error.message;
     }
   };
-  const column = [
-    //  Inthe columns data index propert must matchwithmongodb model properties (this is for antitynotbootsrap)
-
-    {
-      title: "Name",
-      description: "name",
-    },
-    {
-      title: "Description",
-      description: "description",
-    },
-    {
-      title: "Price",
-      description: "price",
-    },
-    {
-      title: "Category",
-      description: "category",
-    },
-    {
-      title: "Age",
-      description: "age",
-    },
-    {
-      title: "Status",
-      description: "status",
-    },
-    {
-      title: "Action",
-      description: "action",
-    },
-  ];
 
   useEffect(() => {
     getData();
   }, [shoModel]);
+
   return (
     <>
       <div className="d-flex justify-content-end">
@@ -100,9 +66,8 @@ function Product() {
           Add Product
         </button>
       </div>
-      {/* Lets create table  */}
       <div className="table-responsive">
-        <table className="table caption-top  ">
+        <table className="table caption-top">
           <caption>List of products</caption>
           <thead className="text-center">
             <tr>
@@ -116,39 +81,46 @@ function Product() {
             </tr>
           </thead>
           <tbody className="text-center">
-            {products.map((data, index) => {
-              return (
-                <tr key={index}>
-                  <td>{data.name}</td>
-                  <td>{data.description}</td>
-                  <td>{data.price}</td>
-                  <td>{data.category}</td>
-                  <td>{data.age}</td>
-                  <td>{data.status}</td>
-                  <td className="">
-                    <div className="">
-                      <button
-                        className="btn btn-success"
-                        onClick={() => {
-                          setSelectedProduct(data);
-                          setShoModel(true);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-danger  ms-2"
-                        onClick={() => {
-                          deleteProduct(data._id);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+            {products.map((data, index) => (
+              <tr key={index}>
+                <td>{data.name}</td>
+                <td>{data.description}</td>
+                <td>{data.price}</td>
+                <td>{data.category}</td>
+                <td>{data.age}</td>
+                <td>{data.status}</td>
+                <td>
+                  <div>
+                    <button
+                      className="btn btn-success"
+                      onClick={() => {
+                        setSelectedProduct(data);
+                        setShoModel(true);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger ms-2"
+                      onClick={() => {
+                        deleteProduct(data._id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                    {/* <button
+                      className="btn btn-warning ms-2"
+                      onClick={() => {
+                        setSelectedProduct(data);
+                        setShowBids(true);
+                      }}
+                    >
+                      Show Bids
+                    </button> */}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -158,7 +130,14 @@ function Product() {
             shoModel={shoModel}
             setShoModel={setShoModel}
             selectedProduct={selectedProduct}
-            getData={getData} // whenever makechanges justreload the data
+            getData={getData}
+          />
+        )}
+        {showBids && (
+          <Bids
+            showBids={showBids}
+            setShowBids={setShowBids}
+            selectedProduct={selectedProduct}
           />
         )}
       </div>

@@ -1,7 +1,11 @@
 import React from "react";
 import Product from "./Products/Product";
+import UserBids from "./UserBids/UserBids";
+import { useSelector } from "react-redux";
+import General from "./General/General";
 
 function Profile() {
+  const { user } = useSelector((state) => state.users);
   return (
     <div>
       {/* Tabs Navigation */}
@@ -66,7 +70,7 @@ function Profile() {
           role="tabpanel"
           aria-labelledby="bids-tab"
         >
-          <h1>Bids</h1>
+          <UserBids />
         </div>
         <div
           className="tab-pane fade"
@@ -74,7 +78,7 @@ function Profile() {
           role="tabpanel"
           aria-labelledby="general-tab"
         >
-          <h1>General</h1>
+          <General user={user} />
         </div>
       </div>
     </div>
