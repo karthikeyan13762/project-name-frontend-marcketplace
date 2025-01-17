@@ -51,10 +51,10 @@ function Login() {
   };
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("https://marcketplace-8.netlify.app");
+      navigate("/");
       // Clear old user data
     }
-  }, [navigate]);
+  }, [dispatch]);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
