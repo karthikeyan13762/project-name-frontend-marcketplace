@@ -3,7 +3,7 @@ import "../../../css/Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { GetCurrentUser, LoginUser } from "../../apicalls/users";
 import { SetLoader } from "../../redux/loaderSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { SetUser } from "../../redux/userSlice";
 
 function Login() {
@@ -36,8 +36,8 @@ function Login() {
         const userResponse = await GetCurrentUser();
         if (userResponse.success) {
           dispatch(SetUser(userResponse.data)); // Set the user in Redux
+          navigate("/");
         }
-        navigate("/");
 
         setEmail("");
         setPassword("");
@@ -51,7 +51,7 @@ function Login() {
   };
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/");
+      navigate("https://marcketplace-8.netlify.app");
       // Clear old user data
     }
   }, [navigate]);
