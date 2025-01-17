@@ -19,7 +19,7 @@ function App() {
     <>
       {loading && <Spinner />}
 
-      <Router>
+      <Router basename="/https://marcketplace-8.netlify.app">
         <Routes>
           {/* home page is protected */}
           <Route
@@ -56,6 +56,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="*" element={<div>Page Not Found</div>} />
         </Routes>
       </Router>
     </>

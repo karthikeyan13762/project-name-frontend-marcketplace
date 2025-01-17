@@ -28,7 +28,8 @@ function Login() {
 
       if (response.success) {
         localStorage.setItem("token", response.data);
-        window.location.reload();
+        navigate("/");
+        // window.location.reload();
         // Clear the user state in Redux
         // Refresh the page after logging out
 
@@ -36,17 +37,16 @@ function Login() {
         const userResponse = await GetCurrentUser();
         if (userResponse.success) {
           dispatch(SetUser(userResponse.data)); // Set the user in Redux
-          navigate("/");
         }
 
-        setEmail("");
-        setPassword("");
+        // setEmail("");
+        // setPassword("");
       } else {
         throw new Error(response.message);
       }
     } catch (error) {
       dispatch(SetLoader(false));
-      return error.message;
+      throw error.message;
     }
   };
   useEffect(() => {
@@ -54,7 +54,7 @@ function Login() {
       navigate("/");
       // Clear old user data
     }
-  }, [dispatch]);
+  }, [navigate]);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
