@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://project-name-backend-marcketplace.onrender.com", // Backend server URL
+        target: "https://marcketplace-8.netlify.app", // Backend server URL
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ""), // Optional: Removes '/api' prefix
       },
