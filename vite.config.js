@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // Backend server URL
+        target: "https://project-name-backend-marcketplace.onrender.com", // Backend server URL
         changeOrigin: true,
         // rewrite: (path) => path.replace(/^\/api/, ""), // Optional: Removes '/api' prefix
       },
