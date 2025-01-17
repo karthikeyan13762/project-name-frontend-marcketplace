@@ -19,7 +19,7 @@ function App() {
     <>
       {loading && <Spinner />}
 
-      <Router basename="/https://marcketplace-8.netlify.app">
+      <Router basename="/">
         <Routes>
           {/* home page is protected */}
           <Route
