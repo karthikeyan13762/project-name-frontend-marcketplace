@@ -6,6 +6,6 @@ export const axiosInstance = axios.create({
   headers: {
     // "Content-Type": "application/json", // Default content type
     // this is the standerd way to sendingtheauthorizationto the backend
-    Authorization: `Barer ${localStorage.getItem("token")} `,
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   },
 });
