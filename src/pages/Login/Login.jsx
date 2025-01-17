@@ -54,7 +54,7 @@ function Login() {
       navigate("/");
       // Clear old user data
     }
-  }, []);
+  }, [navigate]);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
