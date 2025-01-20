@@ -28,7 +28,7 @@ function Login() {
 
       if (response.success) {
         localStorage.setItem("token", response.data);
-        navigate("/");
+
         // window.location.reload();
         // Clear the user state in Redux
         // Refresh the page after logging out
@@ -38,7 +38,7 @@ function Login() {
         if (userResponse.success) {
           dispatch(SetUser(userResponse.data)); // Set the user in Redux
         }
-
+        navigate("/");
         // setEmail("");
         // setPassword("");
       } else {
