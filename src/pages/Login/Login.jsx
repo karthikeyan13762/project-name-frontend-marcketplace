@@ -7,59 +7,57 @@ import { useDispatch } from "react-redux";
 import { SetUser } from "../../redux/userSlice";
 
 function Login() {
-  const [email, setEmail] = useState(""); // To hold the email value
-  const [password, setPassword] = useState(""); // To hold the password value
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Handle form submission
+
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the page from reloading on form submit
+    e.preventDefault();
+    setError("");
+    dispatch(SetLoader(true));
 
     try {
-      dispatch(SetLoader(true)); //intialy setloader true once we gotthe response setloader falseeventhe catch block also false
-      // Prepare the payload to be sent to the backend
       const payload = { email: email, password: password };
 
-      // Call the LoginUser function from the API utility
       const response = await LoginUser(payload);
-
-      dispatch(SetLoader(false));
 
       if (response.success) {
         localStorage.setItem("token", response.data);
 
-        // window.location.reload();
-        // Clear the user state in Redux
-        // Refresh the page after logging out
-
-        // window.location.href = "/"; -> this is blinking so we use useNavigate // lets check authorization i am navigating the user to home page by refreshing the normal page
         const userResponse = await GetCurrentUser();
         if (userResponse.success) {
-          dispatch(SetUser(userResponse.data)); // Set the user in Redux
+          dispatch(SetUser(userResponse.data));
+          navigate("/");
+        } else {
+          setError(userResponse.message || "Failed to fetch user data.");
         }
-        navigate("/");
-        // setEmail("");
-        // setPassword("");
       } else {
-        throw new Error(response.message);
+        setError(response.message || "Login failed.");
       }
     } catch (error) {
+      setError(error.message || "An unexpected error occurred.");
+    } finally {
       dispatch(SetLoader(false));
-      throw error.message;
     }
   };
+
   useEffect(() => {
     if (localStorage.getItem("token")) {
       navigate("/");
-      // Clear old user data
     }
   }, [navigate]);
+
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
         <h2>Login</h2>
         <hr className="devider" />
+
+        {error && <div className="alert alert-danger">{error}</div>}
+
         <form onSubmit={handleSubmit}>
           <div className="input-feilds">
             <label htmlFor="email">Email</label>
@@ -69,7 +67,7 @@ function Login() {
               name="email"
               placeholder="Email"
               required
-              onChange={(e) => setEmail(e.target.value)} // Set email value on change
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
               maxLength={25}
             />
@@ -82,7 +80,7 @@ function Login() {
               name="password"
               placeholder="Password"
               required
-              onChange={(e) => setPassword(e.target.value)} // Set password value on change
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
               maxLength={25}
             />
