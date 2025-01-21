@@ -8,14 +8,15 @@ function Register() {
   const [name, setName] = useState(""); // To store name input
   const [email, setEmail] = useState(""); // To store email input
   const [password, setPassword] = useState(""); // To store password input
-
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload on form submission
+    setError("");
+    dispatch(SetLoader(true));
     try {
-      dispatch(SetLoader(true));
       // Prepare the payload to send to the backend
       const payload = { name: name, email: email, password: password };
 
@@ -26,10 +27,9 @@ function Register() {
       // Handle the response (e.g., show a success message, or handle error)
       if (response.success) {
         navigate("/login");
+      } else {
+        setError(response.message || "Registration failed.");
       }
-      setName("");
-      setEmail("");
-      setPassword("");
     } catch (error) {
       dispatch(SetLoader(false));
       return error.message;
@@ -39,12 +39,13 @@ function Register() {
     if (localStorage.getItem("token")) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
   return (
     <div className="container-fluied vh-100 d-flex justify-content-center align-items-center">
       <div className="bg-white p-5 rounded register-form">
         <h2>Register</h2>
         <hr className="devider" />
+        {error && <div className="alert alert-danger">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="input-feilds">
             <label htmlFor="name">Name</label>
